@@ -24,6 +24,7 @@ jobs:
       run: |
         cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app 
         ls -la
+        cp package-lock.json /home/runner/.npm/
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
