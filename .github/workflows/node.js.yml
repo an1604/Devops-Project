@@ -26,6 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: ls -l
+    - run: cd git-actions-practice/DevOpsProject-app/
+    - run: ls -l
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
