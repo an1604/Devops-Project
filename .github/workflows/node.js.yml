@@ -21,8 +21,9 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: List root directory contents
-      run: ls -la # List contents of the repository root
-    
+      run: |
+        cd /DevOpsProject-app 
+        ls -la 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
