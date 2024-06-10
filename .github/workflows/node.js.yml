@@ -66,11 +66,16 @@ jobs:
         npm ci
         npm run build --if-present
         npm start &  # Starting the server in the background
-        sleep 10
+        sleep 20
+        # Trying to sent a GET request to see if thr server is really up
+        until curl --output /dev/null --silent --head --fail http://127.0.0.1:5000; do
+          echo 'Waiting for the server to be up...'
+          sleep 2
+        done
     - name: Test for public javascript library vulnerabilities 
       uses: lirantal/is-website-vulnerable@main
       with:
-        scan-url: "http://192.168.1.176:5000" 
+        scan-url: "http://127.0.0.1:5000" 
 
     - name: Upload Security Artifact
       uses: actions/upload-artifact@v4
