@@ -57,24 +57,40 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+    
     steps:
     - name: Check out the code
       uses: actions/checkout@v4
       
     - name: Run security scan on server
+      env:
+        IP_ADDRESS: $(hostname -I | awk '{print $1}')
       run: |
         cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
         npm ci
         npm run build --if-present
         npm start &  # Starting the server in the background
         sleep 30
-        # Get the IP address of the machine
-        IP_ADDRESS=$(hostname -I | awk '{print $1}')
         echo "Server IP address: $IP_ADDRESS"
+        # Send a GET request to check if the server is up and running
+        until curl --output /dev/null --silent --head --fail http://$IP_ADDRESS:5000; do
+          echo 'Waiting for the server to be up...'
+          sleep 5
+        done
     - name: Test for public javascript library vulnerabilities 
       uses: lirantal/is-website-vulnerable@main
       with:
-        scan-url: "http://$IP_ADDRESS:5000"  # Using dynamically determined IP
+        scan-url: http://${{ env.IP_ADDRESS }}:5000
 
     - name: Upload Security Artifact
       uses: actions/upload-artifact@v4
