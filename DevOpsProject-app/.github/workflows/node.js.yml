@@ -1,0 +1,93 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build: # This section builds the project, and test it 
+
+    runs-on: ubuntu-latest # Running onubuntu OS 
+
+    strategy:
+      matrix:
+        node-version: [20.x] # The ubuntu OS will run's parllel on multiple versions.
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4 # Using the checkout action (predifind action, open source)
+    - name: Use Node.js ${{ matrix.node-version }} 
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    # All the 'run' sections are instructions that runs on the ubuntu OS. 
+    - run: echo 'Building the project...'
+    - run: sleep 3 
+    # - run: npm ci 
+    # - run: npm run build --if-present
+    # - run: npm test
+    - run: echo 'Building done!'
+    
+    # Getting the artifacts after the build section's end.
+    # - name: Upload build artifacts
+    #   uses: actions/upload-artifact@v4.3.3
+    #   with:
+    #     name: build-artifact-${{ matrix.node-version }}
+    #     path: /builds # TODO: Repalce the path to other path.
+
+  # security:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Use Node.js ${{ matrix.node-version }}
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
+  #       cache: 'npm'
+  #   - run: npm ci
+  #   - run: npm run build --if-present
+  #   - run: npm start &  # Starting the server in the background
+  #   - name: Wait for server to be up
+  #     run: sleep 10 
+  #   - name: Test for public javascript library vulnerabilities 
+  #     uses: lirantal/is-website-vulnerable@main
+  #     with:
+  #       scan-url: "http://localhost:3000" # Assuming the server runs on localhost:3000...
+  #   # - name: Set up Snyk
+  #   #   uses: snyk/actions/setup@v2
+  #   #   with:
+  #   #     version: 'latest'
+  #   # - name: Authenticate Snyk
+  #   #   run: snyk auth ${{ secrets.SNYK_TOKEN }}
+  #   # - name: Test for vulnerabilities
+  #   #   run: snyk test
+  #   - name: Upload Security Artifact
+  #     uses: actions/upload-artifact@v3
+  #     with:
+  #       name: security-artifact
+  #       path: /builds
+    
+  # docker: # New Job, Pushing the project into the docker privte repository. 
+
+  #   runs-on: ubuntu-latest
+  #    neecds: security 
+
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Set up Docker Buildx
+  #     uses: docker/setup-buildx-action@v2
+  #   - name: Log in to Docker Hub
+  #     uses: docker/login-action@v2
+  #     with:
+  #       username: ${{ secrets.DOCKER_USERNAME }}
+  #       password: ${{ secrets.DOCKER_PASSWORD }}
+  #   - name: Build and push Docker image
+  #     uses: docker/build-push-action@v4
+  #     with:
+  #       context: .
+  #       push: true
+  #       tags: ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest

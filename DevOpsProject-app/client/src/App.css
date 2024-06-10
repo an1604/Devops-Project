@@ -1,0 +1,250 @@
+* {
+  /* box-sizing: border-box; */
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+}
+h1 {
+  text-align: center;
+  margin: 20px 0;
+  color: #000000;
+}
+
+h2 {
+  text-align: center;
+  margin: 20px 0;
+  color: #000000;
+}
+
+button {
+  margin: 5px auto 20px auto !important ;
+  padding: 10px;
+  border: none;
+  size: 100% !important;
+  border-radius: 10px !important;
+  background-color: #535c91;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background-color: #8f95b6;
+}
+
+.postcomp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto auto 20px auto;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #1b1a55;
+  color: #ffffff;
+  width: 50%;
+  min-height: 200px;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+
+.postcomp:hover {
+  box-shadow: 0 0 20px #000;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto auto 20px auto;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #1b1a55;
+  width: 50%;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+
+input {
+  margin: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #9290c3;
+  width: 80%;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+
+input:hover {
+  box-shadow: 0 0 20px #000;
+}
+
+label {
+  margin: 10px 0;
+  padding: 10px;
+  border: none;
+  width: 80%;
+  color: #ffffff;
+}
+
+#navbar-css {
+  background-color: #070f2b;
+}
+
+.create-post input {
+  margin: 10px;
+}
+
+.create-post {
+  margin-top: 5%;
+}
+
+#file {
+  margin: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #9290c3;
+  width: 80%;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.imgProfile {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 10px;
+}
+
+.comment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin: auto auto 20px auto;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #1b1a55;
+  color: #ffffff;
+  width: 90%;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+
+.create-post-btn {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #9290c3;
+  width: 80%;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.postcomp-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
+  border-radius: 5px;
+  color: #ffffff;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.postcomp-user-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: black;
+}
+
+.postcomp-img-container {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background-color: rgb(43, 42, 42);
+}
+
+.postcomp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.postcomp-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.iconProfile {
+  color: #9290c3;
+  height: 30px;
+}
+
+.profile-page{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto auto 20px auto;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #1b1a55;
+  color: #ffffff;
+  width: 50%;
+  min-height: 200px;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+
+.user-photo{
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 10px;
+}
+
+.user-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: auto auto 20px auto;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background-color: #4c4b91;
+  color: #ffffff;
+  width: 100%;
+  min-height: 200px;
+  box-shadow: 0 0 10px #000;
+  transition: all 0.3s ease;
+}
+
+.user-btns{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+} 
+.postcomp-user-username{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  text-align: center;
+  margin: 0px;
+}
