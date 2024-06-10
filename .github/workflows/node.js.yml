@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,8 +35,70 @@ jobs:
       run: |
         cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
         npm run build --if-present
-
+    - name: Client-side checking 
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
+        npm ci
+        npm run build --if-present
+        # npm test
+    - name: Server-side checking 
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+        npm ci
+        npm run build --if-present
+        # npm test
+    
     # - name: Run tests
     #   run: |
     #     cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
     #     npm test
+
+  security-server:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v4
+      
+    - name: Run security scan on server
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+        npm ci
+        npm run build --if-present
+        npm start &  # Starting the server in the background
+        sleep 10
+    - name: Test for public javascript library vulnerabilities 
+      uses: lirantal/is-website-vulnerable@main
+      with:
+        scan-url: "http://localhost:5000" 
+
+    - name: Upload Security Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-artifact
+        path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+  
+  # security-client:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Check out the code
+  #     uses: actions/checkout@v4
+      
+  #   - name: Run security scan on server
+  #     run: |
+  #       cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
+  #       npm ci
+  #       npm run build --if-present
+  #       npm start &  # Starting the server in the background
+  #       sleep 10
+  #   - name: Test for public javascript library vulnerabilities 
+  #     uses: lirantal/is-website-vulnerable@main
+  #     with:
+  #       scan-url: "http://localhost:5000" 
+
+  #   - name: Upload Security Artifact
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: security-artifact
+  #       path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
