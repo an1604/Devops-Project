@@ -70,7 +70,7 @@ jobs:
     - name: Test for public javascript library vulnerabilities 
       uses: lirantal/is-website-vulnerable@main
       with:
-        scan-url: "http://localhost:5000" 
+        scan-url: "http://192.168.1.176:5000" 
 
     - name: Upload Security Artifact
       uses: actions/upload-artifact@v4
