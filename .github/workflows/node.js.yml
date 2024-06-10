@@ -18,12 +18,11 @@ jobs:
       matrix:
         node-version: [20.x]
     steps:
-    - run: ls -l # See where I am in the firsty place.
-    # Step into the target directory.
-    - run: cd git-actions-practice/DevOpsProject-app/
-    - run: ls -l
-    
     - uses: actions/checkout@v4
+    
+    - name: List root directory contents
+      run: ls -la # List contents of the repository root
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
