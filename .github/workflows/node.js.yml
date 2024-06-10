@@ -22,8 +22,9 @@ jobs:
     
     - name: List root directory contents
       run: |
-        cd /DevOpsProject-app 
+        export current_dir=$(pwd)
         ls -la 
+        cd /current_dir/DevOpsProject-app 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
