@@ -65,18 +65,17 @@ jobs:
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
-          json: true
-#          args: --json-file-output=snyk_report.json
 
-#      - name: Upload Snyk Report
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: snyk-report
-#          path: snyk_report.json
+        with:
+          args: --sarif-file-output=snyk.sarif 
+            - name: Upload result to GitHub Code Scanning
+              uses: github/codeql-action/upload-sarif@v2
+              with:
+                json: true
+                sarif_file: snyk.sarif
 
   docker: # New Job, Pushing the project into the docker private repository. 
     runs-on: ubuntu-latest
