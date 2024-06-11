@@ -7,11 +7,11 @@ WORKDIR /usr/src/app
 # Copy the main package.json and package-lock.json files
 COPY package*.json ./
 
-# Install root dependencies
-RUN npm ci
-
 # Copy the rest of the application code
 COPY . .
+
+# Install root dependencies
+RUN npm ci
 
 # Set the working directory to the server directory and install server dependencies
 WORKDIR /usr/src/app/DevOpsProject-app/server
