@@ -72,6 +72,12 @@ jobs:
           command: monitor
           json: true
 
+      - name: Upload Snyk Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-report
+          path: snyk.sarif
+
   docker: # New Job, Pushing the project into the docker private repository. 
     runs-on: ubuntu-latest
     needs: snyk_monitorscan
