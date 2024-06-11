@@ -14,11 +14,11 @@ RUN npm ci
 COPY . .
 
 # Set the working directory to the server directory and install server dependencies
-WORKDIR /usr/src/app/server
+WORKDIR /usr/src/git-actions-practice/server
 RUN npm ci
 
 # Build the application from the root directory
-WORKDIR /usr/src/app/git-actions-practice
+WORKDIR /usr/src/git-actions-practice
 RUN npm run build
 
 # Expose the port the app runs on
