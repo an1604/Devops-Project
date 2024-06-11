@@ -2,73 +2,98 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
-  
+    branches: [ "main" ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [ 20.x ]
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - uses: actions/checkout@v4
 
-    - name: List root directory contents
-      run: ls -la
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice
-        npm ci
+      - name: List root directory contents
+        run: ls -la
 
-    - name: Build the project
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/server
-        npm run build --if-present || true  # Continue even if there are errors
+      - name: Install dependencies
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice
+          npm ci
 
-    - name: Client-side checking 
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/client
-        npm ci
-        npm run build --if-present || true 
+      - name: Build the project
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/server
+          npm run build --if-present || true  # Continue even if there are errors
 
-    - name: Server-side checking 
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice
-        npm ci
-        npm run build --if-present || true  
-    
-    - name: Run tests
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice
-        npm test || true  
+      - name: Client-side checking
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/client
+          npm ci
+          npm run build --if-present || true 
+
+      - name: Server-side checking
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice
+          npm ci
+          npm run build --if-present || true  
+
+      - name: Run tests
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice
+          npm test || true  
   
+  snyk_monitorscan:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          json: true
+          args: --json-file-output=snyk_report.json
+
+      - name: Upload Snyk Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-report
+          path: snyk_report.json
+
   docker: # New Job, Pushing the project into the docker private repository. 
     runs-on: ubuntu-latest
-    needs: build
+    needs: snyk_monitorscan
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/DevOps_project:latest

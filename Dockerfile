@@ -17,6 +17,7 @@ COPY . .
 WORKDIR /usr/src/git-actions-practice/server
 RUN npm ci
 
+#TODO: CHECK THIS ONE OUT!
 #WORKDIR /usr/src/git-actions-practice/server
 #RUN npm run build
 
