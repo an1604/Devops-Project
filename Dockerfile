@@ -11,6 +11,7 @@ COPY package*.json ./
 COPY . .
 
 # Install root dependencies
+RUN cd /usr/src/app/DevOpsProject-app
 RUN npm ci
 
 # Set the working directory to the server directory and install server dependencies
