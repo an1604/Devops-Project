@@ -61,23 +61,21 @@ jobs:
     - name: Check out the code
       uses: actions/checkout@v4
 
-    - name: Get VM IP address
-      id: get_ip
-      run: echo "HOST_IP=$(hostname -I | awk '{print $1}')" >> $GITHUB_ENV
-
     - name: Run security scan on server
       run: |
-        export HOST_IP=$(hostname -I | awk '{print $1}')
+        export HOST_IP=$(cat ip_address.txt | cut -d'=' -f2)
         cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
         npm ci
         npm run build --if-present
         npm start &  # Starting the server in the background
-        sleep 30
+        sleep 10
         echo "Server IP address: $HOST_IP"
 
     - name: Test for public JavaScript library vulnerabilities
       run: |
-        export HOST_IP=$(hostname -I | awk '{print $1}')
+        export HOST_IP=$(cat ip_address.txt | cut -d'=' -f2)
+        echo "Server IP address: $HOST_IP"
+        sleep 5
         npx is-website-vulnerable http://$HOST_IP:5000
 
     - name: Upload Security Artifact
@@ -85,21 +83,3 @@ jobs:
       with:
         name: security-artifact
         path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-
-  #   - name: Run security scan on server
-  #     run: |
-  #       cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
-  #       npm ci
-  #       npm run build --if-present
-  #       npm start &  # Starting the server in the background
-  #       sleep 10
-  #   - name: Test for public javascript library vulnerabilities 
-  #     uses: lirantal/is-website-vulnerable@main
-  #     with:
-  #       scan-url: "http://localhost:5000" 
-
-  #   - name: Upload Security Artifact
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: security-artifact
-  #       path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
