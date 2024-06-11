@@ -27,3 +27,4 @@ EXPOSE 5000
 # Start the application from the server directory
 WORKDIR /usr/src/app/DevOpsProject-app/server
 CMD ["npm", "start"]
+# THE END
