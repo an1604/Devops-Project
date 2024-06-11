@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -12,95 +12,142 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [ 20.x ]
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - uses: actions/checkout@v4
 
-    - name: List root directory contents
-      run: ls -la
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-        npm ci
+      - name: List root directory contents
+        run: ls -la
 
-    - name: Build the project
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-        npm run build --if-present || true  # Continue even if there are errors
+      - name: Install dependencies
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+          npm ci
 
-    - name: Client-side checking 
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
-        npm ci
-        npm run build --if-present || true 
+      - name: Build the project
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+          npm run build --if-present || true  # Continue even if there are errors
 
-    - name: Server-side checking 
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-        npm ci
-        npm run build --if-present || true  
-    
-    - name: Run tests
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-        npm test || true  
+      - name: Client-side checking
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
+          npm ci
+          npm run build --if-present || true 
 
-  security-server:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    # services:
-    #   mongo:
-    #     image: mongo:latest
-    #     ports:
-    #       - 27017:27017
-    #     options: >-
-    #       --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 3
-    
-    steps:
-    - name: Check out the code
-      uses: actions/checkout@v4
-      
-    - name: Run security scan on server
-      env:
-        IP_ADDRESS: $(hostname -I | awk '{print $1}')
-      run: |
-        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-        npm ci
-        npm run build --if-present
-        npm start &  # Starting the server in the background
-        sleep 30
-        echo "Server IP address: $IP_ADDRESS"
-    - name: Test for public javascript library vulnerabilities 
-      uses: lirantal/is-website-vulnerable@main
-      with:
-        scan-url: http://${{ env.IP_ADDRESS }}:5000
+      - name: Server-side checking
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+          npm ci
+          npm run build --if-present || true  
 
-    - name: Upload Security Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-artifact
-        path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+      - name: Run tests
+        run: |
+          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+          npm test || true  
 
-  
-  # security-client:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Check out the code
-  #     uses: actions/checkout@v4
-      
+  name: Node.js CI
+
+  on:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+
+      strategy:
+        matrix:
+          node-version: [ 20.x ]
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+
+        - name: List root directory contents
+          run: ls -la
+
+        - name: Install dependencies
+          run: |
+            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+            npm ci
+
+        - name: Build the project
+          run: |
+            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+            npm run build --if-present || true  # Continue even if there are errors
+
+        - name: Client-side checking
+          run: |
+            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
+            npm ci
+            npm run build --if-present || true 
+
+        - name: Server-side checking
+          run: |
+            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+            npm ci
+            npm run build --if-present || true  
+
+        - name: Run tests
+          run: |
+            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+            npm test || true  
+
+    security-server:
+      needs: build
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Check out the code
+          uses: actions/checkout@v4
+
+        - name: Get VM IP address
+          id: get_ip
+          run: echo "HOST_IP=$(hostname -I | awk '{print $1}')" >> $GITHUB_ENV
+
+        - name: Run security scan on server
+          run: |
+            export HOST_IP=$(hostname -I | awk '{print $1}')
+            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+            npm ci
+            npm run build --if-present
+            npm start &  # Starting the server in the background
+            sleep 10
+            echo "Server IP address: $HOST_IP"
+
+        - name: Test for public JavaScript library vulnerabilities
+          run: |
+            export HOST_IP=$(hostname -I | awk '{print $1}')
+            npx is-website-vulnerable http://$HOST_IP:5000
+
+        - name: Upload Security Artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: security-artifact
+            path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+
+          # security-client:
+        #   needs: build
+        #   runs-on: ubuntu-latest
+        #   steps:
+        #   - name: Check out the code
+        #     uses: actions/checkout@v4
+
   #   - name: Run security scan on server
   #     run: |
   #       cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
