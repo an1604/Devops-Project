@@ -73,10 +73,10 @@ jobs:
 
     - name: Test for public JavaScript library vulnerabilities
       run: |
-        export HOST_IP=$(cat ip_address.txt | cut -d'=' -f2)
-        echo "Server IP address: $HOST_IP"
+        export IP_ADDRESS=$(hostname -I | awk '{print $1}')
+        echo "Server IP address: $IP_ADDRESS"
         sleep 5
-        npx is-website-vulnerable http://$HOST_IP:5000
+        npx is-website-vulnerable http://$IP_ADDRESS:5000
 
     - name: Upload Security Artifact
       uses: actions/upload-artifact@v4
