@@ -17,8 +17,8 @@ COPY . .
 WORKDIR /usr/src/git-actions-practice/server
 RUN npm ci
 
-WORKDIR /usr/src/git-actions-practice/server
-RUN npm run build
+#WORKDIR /usr/src/git-actions-practice/server
+#RUN npm run build
 
 # Expose the port the app runs on
 EXPOSE 5000
