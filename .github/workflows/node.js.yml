@@ -96,4 +96,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/DevOps_project:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops_project:latest
