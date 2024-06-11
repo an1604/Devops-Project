@@ -2,7 +2,7 @@
 FROM node:20
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/git-actions-practice
 
 # Copy the main package.json and package-lock.json files
 COPY package*.json ./
@@ -14,17 +14,16 @@ RUN npm ci
 COPY . .
 
 # Set the working directory to the server directory and install server dependencies
-WORKDIR /usr/src/app/DevOpsProject-app/server
+WORKDIR /usr/src/app/server
 RUN npm ci
 
 # Build the application from the root directory
-WORKDIR /usr/src/app/DevOpsProject-app
+WORKDIR /usr/src/app/git-actions-practice
 RUN npm run build
 
 # Expose the port the app runs on
 EXPOSE 5000
 
 # Start the application from the server directory
-WORKDIR /usr/src/app/DevOpsProject-app/server
+WORKDIR /usr/src/git-actions-practice/server
 CMD ["npm", "start"]
-# THE END
