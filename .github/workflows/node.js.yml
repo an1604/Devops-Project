@@ -1,10 +1,10 @@
-name: Node.js CI # The nodejs workflow of mine
+name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -12,141 +12,79 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20.x ]
+        node-version: [20.x]
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+    - name: List root directory contents
+      run: ls -la
 
-      - name: List root directory contents
-        run: ls -la
+    - name: Install dependencies
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+        npm ci
 
-      - name: Install dependencies
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-          npm ci
+    - name: Build the project
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+        npm run build --if-present || true  # Continue even if there are errors
 
-      - name: Build the project
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-          npm run build --if-present || true  # Continue even if there are errors
+    - name: Client-side checking 
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
+        npm ci
+        npm run build --if-present || true 
 
-      - name: Client-side checking
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
-          npm ci
-          npm run build --if-present || true 
+    - name: Server-side checking 
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+        npm ci
+        npm run build --if-present || true  
+    
+    - name: Run tests
+      run: |
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
+        npm test || true  
 
-      - name: Server-side checking
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-          npm ci
-          npm run build --if-present || true  
+  security-server:
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Run tests
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-          npm test || true  
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v4
 
-  name: Node.js CI
+    - name: Get VM IP address
+      id: get_ip
+      run: echo "HOST_IP=$(hostname -I | awk '{print $1}')" >> $GITHUB_ENV
 
-  on:
-    push:
-      branches: [ "main" ]
-    pull_request:
-      branches: [ "main" ]
+    - name: Run security scan on server
+      run: |
+        export HOST_IP=$(hostname -I | awk '{print $1}')
+        cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
+        npm ci
+        npm run build --if-present
+        npm start &  # Starting the server in the background
+        sleep 30
+        echo "Server IP address: $HOST_IP"
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
+    - name: Test for public JavaScript library vulnerabilities
+      run: |
+        export HOST_IP=$(hostname -I | awk '{print $1}')
+        npx is-website-vulnerable http://$HOST_IP:5000
 
-      strategy:
-        matrix:
-          node-version: [ 20.x ]
-
-      steps:
-        - uses: actions/checkout@v4
-
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-            cache: 'npm'
-
-        - name: List root directory contents
-          run: ls -la
-
-        - name: Install dependencies
-          run: |
-            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-            npm ci
-
-        - name: Build the project
-          run: |
-            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-            npm run build --if-present || true  # Continue even if there are errors
-
-        - name: Client-side checking
-          run: |
-            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/client
-            npm ci
-            npm run build --if-present || true 
-
-        - name: Server-side checking
-          run: |
-            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-            npm ci
-            npm run build --if-present || true  
-
-        - name: Run tests
-          run: |
-            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app
-            npm test || true  
-
-    security-server:
-      needs: build
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Check out the code
-          uses: actions/checkout@v4
-
-        - name: Get VM IP address
-          id: get_ip
-          run: echo "HOST_IP=$(hostname -I | awk '{print $1}')" >> $GITHUB_ENV
-
-        - name: Run security scan on server
-          run: |
-            export HOST_IP=$(hostname -I | awk '{print $1}')
-            cd /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-            npm ci
-            npm run build --if-present
-            npm start &  # Starting the server in the background
-            sleep 10
-            echo "Server IP address: $HOST_IP"
-
-        - name: Test for public JavaScript library vulnerabilities
-          run: |
-            export HOST_IP=$(hostname -I | awk '{print $1}')
-            npx is-website-vulnerable http://$HOST_IP:5000
-
-        - name: Upload Security Artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: security-artifact
-            path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
-
-          # security-client:
-        #   needs: build
-        #   runs-on: ubuntu-latest
-        #   steps:
-        #   - name: Check out the code
-        #     uses: actions/checkout@v4
+    - name: Upload Security Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-artifact
+        path: /home/runner/work/git-actions-practice/git-actions-practice/DevOpsProject-app/server
 
   #   - name: Run security scan on server
   #     run: |
