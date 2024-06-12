@@ -14,17 +14,17 @@ import Home from "./pages/Home.tsx";
 import CreatePostPage from "./pages/CreatePostPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import PostCommentsPage from "./pages/PostCommentsPage.tsx";
-import UpdateProfilePage from "./pages/UpdateProfilePage.tsx";
+// import UpdateProfilePage from "./pages/UpdateProfilePage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
   },
-  {
-    path: "/update-profile",
-    element: <UpdateProfilePage />,
-  },
+  // {
+  //   path: "/update-profile",
+  //   element: <UpdateProfilePage />,
+  // },
   {
     path: "/profile",
     element: <ProfilePage />,
