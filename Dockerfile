@@ -25,7 +25,6 @@ RUN npm ci
 # Install client dependencies
 WORKDIR /usr/src/app/client
 RUN npm ci
-RUN npm run build
 
 # Expose necessary ports
 EXPOSE 5000
