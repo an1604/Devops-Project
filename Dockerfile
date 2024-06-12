@@ -21,7 +21,6 @@ COPY . .
 # Install server dependencies
 WORKDIR /usr/src/app/server
 RUN npm ci
-RUN npm run build
 
 # Install client dependencies
 WORKDIR /usr/src/app/client
