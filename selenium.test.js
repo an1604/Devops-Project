@@ -33,5 +33,5 @@ async function checkUrl() {
     }
 }
 
-example();
+// example();
 checkUrl();
