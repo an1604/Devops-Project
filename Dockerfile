@@ -1,37 +1,43 @@
-# Use the official Node.js image as the base image
 FROM node:20
 
-# Set the working directory
-WORKDIR /usr/src/git-actions-practice
+# Install Chrome dependencies
+RUN apt-get update && apt-get install -y wget gnupg2
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+RUN apt-get update && apt-get install -y google-chrome-stable
 
-# Copy the main package.json and package-lock.json files
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json files
 COPY package*.json ./
 
-# Install root dependencies
+# Install dependencies
 RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
 
-# Set the working directory to the server directory and install server dependencies
-WORKDIR /usr/src/git-actions-practice/server
+# Install server dependencies
+WORKDIR /usr/src/app/server
 RUN npm ci
+RUN npm run build
 
-
-# Set the working directory to the client directory and install client dependencies
-WORKDIR /usr/src/git-actions-practice/client
+# Install client dependencies
+WORKDIR /usr/src/app/client
 RUN npm ci
+RUN npm run build
 
-# Expose the port the client runs on
+# Expose necessary ports
+EXPOSE 5000
 EXPOSE 5173
 
-# Expose the port the server runs on
-EXPOSE 5000
+# Set the working directory back to the root
+WORKDIR /usr/src/app
 
-# Start both the server and the client using a script
-WORKDIR /usr/src/git-actions-practice
-
+# Copy the start script
 COPY start.sh ./
 RUN chmod +x start.sh
 
+# Command to run the start script
 CMD ["./start.sh"]

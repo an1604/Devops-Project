@@ -88,6 +88,13 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops_project:latest
-
       - name: Set up Docker Compose
         run: docker-compose up -d --build
+
+      - name: Docker compose tests run
+        uses: cloudposse/github-action-docker-compose-test-run@0.2.0
+        with:
+          workdir: .
+          file: docker-compose.yml
+          service: tests
+          command: npm run test

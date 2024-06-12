@@ -1,27 +1,42 @@
 version: '3.8'
+
 services:
   mongo:
     image: mongo:latest
     container_name: mongo
     ports:
       - "27017:27017"
-  server:
-    build: .
-    command: npm start
     volumes:
-      - .:/usr/src/git-actions-practice
+      - mongo-data:/data/db
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     depends_on:
       - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/your_database_name
+
   client:
     build:
       context: .
       dockerfile: Dockerfile
     command: npm run dev
-    volumes:
-      - .:/usr/src/git-actions-practice
     ports:
       - "5173:5173"
     depends_on:
       - server
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run test
+    depends_on:
+      - client
+
+volumes:
+  mongo-data:
