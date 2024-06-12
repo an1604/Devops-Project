@@ -17,13 +17,23 @@ COPY . .
 WORKDIR /usr/src/git-actions-practice/server
 RUN npm ci
 
-#TODO: CHECK THIS ONE OUT!
-#WORKDIR /usr/src/git-actions-practice/server
-#RUN npm run build
+# Build the server
+RUN npm run build
 
-# Expose the port the app runs on
+# Set the working directory to the client directory and install client dependencies
+WORKDIR /usr/src/git-actions-practice/client
+RUN npm ci
+
+# Expose the port the client runs on
+EXPOSE 5173
+
+# Expose the port the server runs on
 EXPOSE 5000
 
-# Start the application from the server directory
-WORKDIR /usr/src/git-actions-practice/server
-CMD ["npm", "start"]
+# Start both the server and the client using a script
+WORKDIR /usr/src/git-actions-practice
+
+COPY start.sh ./
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]

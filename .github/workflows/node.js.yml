@@ -23,36 +23,27 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: List root directory contents
-        run: ls -la
-
       - name: Install dependencies
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice
-          npm ci
+        run: npm ci
 
       - name: Build the project
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/server
-          npm run build --if-present || true  # Continue even if there are errors
+        run: npm run build --if-present || true
 
       - name: Client-side checking
         run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice/client
+          cd client
           npm ci
           npm run build --if-present || true 
 
       - name: Server-side checking
         run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice
+          cd server
           npm ci
           npm run build --if-present || true  
 
       - name: Run tests
-        run: |
-          cd /home/runner/work/git-actions-practice/git-actions-practice
-          npm test || true  
-  
+        run: npm test || true
+
   snyk_monitorscan:
     needs: build
     runs-on: ubuntu-latest
@@ -78,7 +69,7 @@ jobs:
           name: snyk-report
           path: snyk.sarif
 
-  docker: # New Job, Pushing the project into the docker private repository. 
+  docker:
     runs-on: ubuntu-latest
     needs: snyk_monitorscan
 
@@ -97,3 +88,6 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops_project:latest
+
+      - name: Set up Docker Compose
+        run: docker-compose up -d --build
