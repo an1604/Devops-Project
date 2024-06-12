@@ -17,8 +17,6 @@ COPY . .
 WORKDIR /usr/src/git-actions-practice/server
 RUN npm ci
 
-# Build the server
-RUN npm run build
 
 # Set the working directory to the client directory and install client dependencies
 WORKDIR /usr/src/git-actions-practice/client
