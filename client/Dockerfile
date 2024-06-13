@@ -1,4 +1,5 @@
 # Dockerfile for React.js Client
+# Full path= /home/runner/work/git-actions-practice/git-actions-practice
 
 FROM node:14-alpine
 
