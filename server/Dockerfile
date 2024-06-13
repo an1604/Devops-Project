@@ -1,6 +1,5 @@
-# Dockerfile for Node.js
-
-FROM node:14-alpine
+# Use a Node.js version that supports the nullish coalescing assignment operator
+FROM node:16-alpine
 
 # Set working directory
 WORKDIR /usr/src/git-actions-practice/server
@@ -14,7 +13,7 @@ RUN npm i
 # Copy the rest of the application code
 COPY . .
 
-# Expose port 5000
+# Expose port
 EXPOSE 5000
 
 # Start the application
