@@ -88,6 +88,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./client
+          dockerfile: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops_project-client:latest
 
@@ -95,10 +96,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./server
+          dockerfile: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops_project-server:latest
 
       - name: Set up Docker Compose
-        run: |
-          docker-compose up -d --build
-          docker ps
+        run: docker-compose up -d --build
