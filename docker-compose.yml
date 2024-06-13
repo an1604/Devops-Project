@@ -8,7 +8,7 @@ services:
       - "5173:5173"
     depends_on:
       - api
-    network_mode: host
+#    network_mode: host
 
   api:
     build:
