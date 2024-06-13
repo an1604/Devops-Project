@@ -13,6 +13,7 @@ async function example() {
     }
 }
 
+//Some basic test to just test if the server is up.
 async function checkUrl() {
     let driver = await new Builder().forBrowser('chrome').build();
     try {

@@ -1,42 +1,29 @@
-version: '3.8'
-
+version: '3'
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-
-  server:
+  react-app:
     build:
-      context: .
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+  api:
+    build:
+      context: ./server
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
     depends_on:
       - mongo
     environment:
-      - MONGO_URI=mongodb://mongo:27017/your_database_name
-
-  client:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run dev
+      - MONGO_URL=mongodb://mongo:27017/dbfordevops
+  mongo:
+    image: mongo:latest
     ports:
-      - "5173:5173"
-    depends_on:
-      - server
-
-  tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run test
-    depends_on:
-      - client
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
 
 volumes:
   mongo-data:
