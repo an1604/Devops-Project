@@ -1,9 +1,6 @@
-# Dockerfile for Node.js Server
+# Dockerfile for Node.js
 
 FROM node:14-alpine
-
-# Create a non-root user and set permissions
-RUN addgroup -S mygroup && adduser -S myuser -G mygroup
 
 # Set working directory
 WORKDIR /usr/src/git-actions-practice/server
@@ -11,12 +8,8 @@ WORKDIR /usr/src/git-actions-practice/server
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
-# Install dependencies as non-root user
-RUN chown -R myuser:mygroup /usr/src/git-actions-practice/server
-USER myuser
-
 # Install dependencies
-RUN --mount=type=ssh,uid=$(id -u myuser) npm ci
+RUN npm ci --only=production
 
 # Copy the rest of the application code
 COPY . .
