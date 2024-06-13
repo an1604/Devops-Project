@@ -84,12 +84,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image for client
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./client
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops_project:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops_project-client:latest
+
+      - name: Build and push Docker image for server
+        uses: docker/build-push-action@v4
+        with:
+          context: ./server
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops_project-server:latest
 
       - name: Set up Docker Compose
         run: |
