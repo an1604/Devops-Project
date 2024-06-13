@@ -1,0 +1,34 @@
+# /ansible/deploy_calc.yml
+---
+- name: Deploy Node.js application
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt repository cache
+      apt:
+        update_cache: yes
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: Clone repository
+      git:
+        repo: 'https://github.com/an1604/git-actions-practice.git'
+        dest: /var/www/devops_project
+
+    - name: Install dependencies
+      npm:
+        path: /var/www/devops_project
+        state: present
+
+    - name: Start application
+      shell: npm start
+      args:
+        chdir: /var/www/devops_project
