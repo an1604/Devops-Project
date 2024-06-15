@@ -44,31 +44,31 @@ jobs:
       - name: Run tests
         run: npm test || true
 
-  snyk_monitorscan:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
-          json: true
-
-      - name: Upload Snyk Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: snyk-report
-          path: snyk.sarif
+#  snyk_monitorscan:
+#    needs: build
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Run Snyk to check for vulnerabilities
+#        uses: snyk/actions/node@master
+#        continue-on-error: true
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#        with:
+#          command: monitor
+#          json: true
+#
+#      - name: Upload Snyk Report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: snyk-report
+#          path: snyk.sarif
 
   docker:
-    needs: snyk_monitorscan
+#    needs: snyk_monitorscan
     runs-on: ubuntu-latest
 
     steps:

@@ -1,6 +1,7 @@
-version: '3'
+version: '3.8'
+
 services:
-  react-app:
+  client:
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -8,7 +9,6 @@ services:
       - "5173:5173"
     depends_on:
       - api
-#    network_mode: host
 
   api:
     build:
@@ -18,8 +18,8 @@ services:
       - "5000:5000"
     depends_on:
       - mongo
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/dbfordevops
+    env_file:
+      - .env
 
   mongo:
     image: mongo:latest

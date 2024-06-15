@@ -14,7 +14,7 @@ const app = express();
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/test")
+  .connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/test")
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
@@ -31,13 +31,9 @@ app.get("/", (req, res) => {
 app.use(cors());
 
 app.use("/auth", authRoute);
-
 app.use("/posts", postRoute);
-
 app.use("/user", userRoute);
-
 app.use("/file", fileRoute);
-
 app.use("/comments", commentRoute);
 
 app.use("/public", express.static("public"));
