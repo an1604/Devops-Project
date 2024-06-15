@@ -19,7 +19,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - .env
+      - server/.env
 
   mongo:
     image: mongo:latest
