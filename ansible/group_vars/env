@@ -1,0 +1,6 @@
+vpc_name: ansible-test
+network: 10.10.0.0/16
+aws_region: eu-central-1
+vpc_id: vpc-06d51cdf9df958afe
+subnet_cidr: 10.10.0.0/24
+subnet : eu-central-1a
