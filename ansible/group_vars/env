@@ -4,3 +4,10 @@ aws_region: eu-central-1
 vpc_id: vpc-06d51cdf9df958afe
 subnet_cidr: 10.10.0.0/24
 subnet : eu-central-1a
+aws_ubuntu_ami: ami-0e872aee57663ae2d
+Server_type: t2.micro
+keypair: ansible
+server_volume_size: 8
+env: dev
+server_name: ansible-test
+
