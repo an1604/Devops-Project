@@ -1,20 +1,19 @@
-# Use a Node.js version that supports the nullish coalescing assignment operator
-FROM node:16-alpine
+FROM node:18
 
-# Set working directory
-WORKDIR /usr/src/git-actions-practice/client
+# Set the working directory
+WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm i
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose port
+# Expose the port the app runs on
 EXPOSE 5173
 
-# Start the application
+# Set the command to run the application
 CMD ["npm", "run", "dev"]

@@ -1,4 +1,4 @@
-version: '3.8' #  The version of Docker Compose file format
+version: '3.8' # The version of Docker Compose file format
 
 services:
   # Client service definition
@@ -22,8 +22,19 @@ services:
       - "5000:5000" # Map port 5000 on the host to port 5000 on the API container
     depends_on:
       - mongodb # Ensure the API service starts after the mongodb service
+    environment:
+      - MONGO_URI
+      - JWT_SECRET
+      - JWT_REFRESH_SECRET
+      - JWT_EXPIRATION
+      - GOOGLE_CLIENT_ID
     networks:
-      - node-network # Connect the API service to the node-network
+      - node-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # MongoDB service definition
   mongodb:
@@ -33,7 +44,12 @@ services:
     volumes:
       - dbdata6:/data/db # Mount the volume dbdata6 to /data/db in the container for persistent storage
     networks:
-      - node-network # Connect the MongoDB service to the node-network
+      - node-network
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand('ping')' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 # Volume definition
 volumes:
