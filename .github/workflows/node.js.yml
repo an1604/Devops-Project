@@ -124,7 +124,7 @@ jobs:
       - name: Scan the web application
         uses: zaproxy/action-baseline@v0.6.1
         with:
-          docker_name: 'owasp/zap2docker-weekly'
+          docker_name: 'ictu/zap2docker-weekly'
           target: "http://localhost:5173" # The URL of the running application
 #          rules_file_name: '.zap/rules.tsv' # Tells ZAP to use this rule filename for a set of rules defined in the repo
           cmd_options: '-a'
