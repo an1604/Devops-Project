@@ -2,9 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [ 20.x ]
 
     steps:
       - uses: actions/checkout@v4
@@ -44,31 +44,33 @@ jobs:
       - name: Run tests
         run: npm test || true
 
-#  snyk_monitorscan:
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Run Snyk to check for vulnerabilities
-#        uses: snyk/actions/node@master
-#        continue-on-error: true
-#        env:
-#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-#        with:
-#          command: monitor
-#          json: true
-#
-#      - name: Upload Snyk Report
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: snyk-report
-#          path: snyk.sarif
+
+
+  #  snyk_monitorscan:
+  #    needs: build
+  #    runs-on: ubuntu-latest
+  #
+  #    steps:
+  #      - name: Checkout code
+  #        uses: actions/checkout@v4
+  #
+  #      - name: Run Snyk to check for vulnerabilities
+  #        uses: snyk/actions/node@master
+  #        continue-on-error: true
+  #        env:
+  #          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #        with:
+  #          command: monitor
+  #          json: true
+  #
+  #      - name: Upload Snyk Report
+  #        uses: actions/upload-artifact@v4
+  #        with:
+  #          name: snyk-report
+  #          path: snyk.sarif
 
   docker:
-#    needs: snyk_monitorscan
+    #    needs: snyk_monitorscan
     runs-on: ubuntu-latest
 
     steps:
@@ -99,14 +101,18 @@ jobs:
           dockerfile: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops_project-server:latest
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
-      - name: Set up Docker Compose
+
+
+  dast: # Dynamic application security testing section.
+    runs-on: ubuntu-latest
+    needs: docker
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start Docker Compose
         run: docker-compose up -d --build
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -114,6 +120,16 @@ jobs:
           JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.4.0
+        with:
+          target: "http://localhost:80" # The URL of the running application
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stop Docker Compose
+        run: docker-compose down
 
 #  deploy:
 #    needs: docker
