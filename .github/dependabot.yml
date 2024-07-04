@@ -13,7 +13,7 @@ updates:
     directory: "/server" # Location of the server's package.json
     schedule:
       interval: "daily"
-  - package-ecosystem: "docker"
-    directory: "/" # Location of Dockerfile(s)
+  - package-ecosystem: "docker" # This tells Dependabot to look for updates to Docker images. Docker images are the container images specified in Dockerfiles.
+    directory: "/" # The current Location of Dockerfile(s)
     schedule:
       interval: "daily"
