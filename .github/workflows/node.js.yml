@@ -32,13 +32,15 @@ jobs:
       - name: Client-side checking
         run: |
           cd client
-          npm ci
+          rm -rf node_modules
+          npm install
           npm run build --if-present || true 
 
       - name: Server-side checking
         run: |
           cd server
-          npm ci
+          rm -rf node_modules
+          npm install
           npm run build --if-present || true  
 
       - name: Run tests

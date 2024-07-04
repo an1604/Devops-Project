@@ -1,4 +1,3 @@
-# Use an official Node.js image as the base image
 FROM node:18
 
 # Set the working directory
@@ -10,14 +9,11 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
-# Ensure ts-node has the correct permissions
-RUN chmod +x node_modules/.bin/ts-node
-
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the API runs on
-EXPOSE 5000
+# Expose the port the app runs on
+EXPOSE 3000
 
-# Start the application
+# Set the command to run the application
 CMD ["npm", "start"]
