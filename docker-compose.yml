@@ -1,29 +1,45 @@
-version: '3.8'
+version: '3.8' #  The version of Docker Compose file format
 
 services:
+  # Client service definition
   client:
     build:
-      context: ./client
-      dockerfile: Dockerfile
+      context: ./client # Path to the directory containing the Dockerfile for the client
+      dockerfile: Dockerfile # Dockerfile to use for building the client image
     ports:
-      - "5173:5173"
+      - "5173:5173" # Map port 5173 on the host to port 5173 on the client container
     depends_on:
-      - api
+      - api # Ensure the client service starts after the api service
+    networks:
+      - node-network # Connect the client service to the node-network
 
+  # API service definition
   api:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: ./server # Path to the directory containing the Dockerfile for the API
+      dockerfile: Dockerfile # Dockerfile to use for building the API image
     ports:
-      - "5000:5000"
+      - "5000:5000" # Map port 5000 on the host to port 5000 on the API container
     depends_on:
-      - mongo
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+      - mongodb # Ensure the API service starts after the mongodb service
+    networks:
+      - node-network # Connect the API service to the node-network
 
+  # MongoDB service definition
+  mongodb:
+    image: mongo:6-jammy # Use the official MongoDB image version 6-jammy
+    ports:
+      - '27017:27017' # Map port 27017 on the host to port 27017 on the MongoDB container
+    volumes:
+      - dbdata6:/data/db # Mount the volume dbdata6 to /data/db in the container for persistent storage
+    networks:
+      - node-network # Connect the MongoDB service to the node-network
+
+# Volume definition
 volumes:
-  mongo-data:
+  dbdata6: # Define a volume named dbdata6 for MongoDB data persistence
+
+# Network definition
+networks:
+  node-network:
+    driver: bridge # Use the bridge driver to create an isolated network for the containers

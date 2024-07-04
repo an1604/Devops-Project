@@ -115,36 +115,36 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
-  deploy:
-    needs: docker
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-add-repository ppa:ansible/ansible
-          sudo apt-get update
-          sudo apt-get install -y ansible
-          sudo apt-get install -y python3-pip
-          python3 -m pip install --upgrade pip
-          pip3 install ansible==6.7.0 requests botocore boto boto3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-
-      - name: Run playbook
-        run: |
-          ansible-playbook ansible/deploy_calc.yml --ssh-common-args='-o StrictHostKeyChecking=no'
+#  deploy:
+#    needs: docker
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Install dependencies
+#        run: |
+#          sudo apt-add-repository ppa:ansible/ansible
+#          sudo apt-get update
+#          sudo apt-get install -y ansible
+#          sudo apt-get install -y python3-pip
+#          python3 -m pip install --upgrade pip
+#          pip3 install ansible==6.7.0 requests botocore boto boto3
+#
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+#
+#      - name: Install SSH Key
+#        uses: shimataro/ssh-key-action@v2
+#        with:
+#          key: ${{ secrets.PRIVATE_KEY }}
+#          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+#
+#      - name: Run playbook
+#        run: |
+#          ansible-playbook ansible/deploy_calc.yml --ssh-common-args='-o StrictHostKeyChecking=no'
