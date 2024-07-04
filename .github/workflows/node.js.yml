@@ -101,7 +101,7 @@ jobs:
           target: "http://localhost:5173" # The URL of the running application
           cmd_options: '-a'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Stop Docker Compose
         run: docker-compose down
