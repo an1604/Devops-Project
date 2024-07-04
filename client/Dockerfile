@@ -1,3 +1,4 @@
+# Use an official Node.js image as the base image
 FROM node:18
 
 # Set the working directory
@@ -9,11 +10,14 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
+# Ensure Vite has the correct permissions
+RUN chmod +x node_modules/.bin/vite
+
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the app runs on
+# Expose the port Vite runs on
 EXPOSE 5173
 
-# Set the command to run the application
+# Start the application
 CMD ["npm", "run", "dev"]
