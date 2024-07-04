@@ -6,7 +6,7 @@ subnet_cidr: 10.10.0.0/24
 subnet : eu-central-1a
 aws_ubuntu_ami: ami-0e872aee57663ae2d
 Server_type: t2.micro
-keypair: ansible
+keypair: my-keypair
 server_volume_size: 8
 env: dev
 server_name: ansible-test
