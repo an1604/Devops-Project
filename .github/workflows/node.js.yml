@@ -121,10 +121,13 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
-      - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.4.0
+      - name: Scan the web application
+        uses: zaproxy/action-baseline@v0.6.1
         with:
+          docker_name: 'owasp/zap2docker-weekly'
           target: "http://localhost:5173" # The URL of the running application
+#          rules_file_name: '.zap/rules.tsv' # Tells ZAP to use this rule filename for a set of rules defined in the repo
+          cmd_options: '-a'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
