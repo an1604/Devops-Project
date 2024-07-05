@@ -6,6 +6,7 @@ services:
     build:
       context: ./client # Path to the directory containing the Dockerfile for the client
       dockerfile: Dockerfile # Dockerfile to use for building the client image
+    image: avivnat13/devops_project-client:latest
     ports:
       - "5173:5173" # Map port 5173 on the host to port 5173 on the client container
     depends_on:
@@ -18,6 +19,7 @@ services:
     build:
       context: ./server # Path to the directory containing the Dockerfile for the API
       dockerfile: Dockerfile # Dockerfile to use for building the API image
+    image: avivnat13/devops_project-server:latest
     ports:
       - "5000:5000" # Map port 5000 on the host to port 5000 on the API container
     depends_on:
@@ -31,7 +33,7 @@ services:
     networks:
       - node-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000 || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:5000 || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -46,7 +48,7 @@ services:
     networks:
       - node-network
     healthcheck:
-      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand('ping')' || exit 1"]
+      test: [ "CMD-SHELL", "mongosh --eval 'db.adminCommand('ping')' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
