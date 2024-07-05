@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Run a script to deploy the application
         run: |
+          cd /home/ubuntu
           sudo ./deploy_application.sh
 #          sudo docker network create node-network || true
 #          sudo docker run -d --name mongodb --network=node-network -p 27017:27017 -v dbdata6:/data/db mongo:6-jammy
