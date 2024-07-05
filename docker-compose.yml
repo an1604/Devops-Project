@@ -48,7 +48,7 @@ services:
     networks:
       - node-network
     healthcheck:
-      test: [ "CMD-SHELL", "mongosh --eval 'db.adminCommand('ping')' || exit 1" ]
+      test: [ "CMD-SHELL", "mongosh", "--eval", "db.adminCommand('ping') || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
