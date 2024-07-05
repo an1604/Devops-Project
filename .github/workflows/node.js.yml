@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI/CD Pipeline
 
 on:
   push:
@@ -46,31 +46,6 @@ jobs:
       - name: Run tests
         run: npm test || true
 
-
-
-  #  snyk_monitorscan:
-  #    needs: build
-  #    runs-on: ubuntu-latest
-  #
-  #    steps:
-  #      - name: Checkout code
-  #        uses: actions/checkout@v4
-  #
-  #      - name: Run Snyk to check for vulnerabilities
-  #        uses: snyk/actions/node@master
-  #        continue-on-error: true
-  #        env:
-  #          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-  #        with:
-  #          command: monitor
-  #          json: true
-  #
-  #      - name: Upload Snyk Report
-  #        uses: actions/upload-artifact@v4
-  #        with:
-  #          name: snyk-report
-  #          path: snyk.sarif
-
   docker:
     runs-on: ubuntu-latest
 
@@ -87,7 +62,18 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image for client and server
+      - name: Build and push Docker images
+        run: |
+          docker-compose build
+          docker-compose push
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Run Docker Compose to start application
         run: docker-compose up -d --build
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -96,49 +82,14 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
-#      - name: Scan the web application
-#        uses: zaproxy/action-baseline@v0.6.1
-#        with:
-#          docker_name: 'ictu/zap2docker-weekly'
-#          target: "http://localhost:5173" # The URL of the running application
-#          cmd_options: '-a'
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      - name: Scan the web application
+        uses: zaproxy/action-baseline@v0.6.1
+        with:
+          docker_name: 'ictu/zap2docker-weekly'
+          target: "http://localhost:5173" # The URL of the running application
+          cmd_options: '-a'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Stop Docker Compose
         run: docker-compose down
-
-
-  deploy:
-    needs: docker
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-add-repository ppa:ansible/ansible
-          sudo apt-get update
-          sudo apt-get install -y ansible
-          sudo apt-get install -y python3-pip
-          python3 -m pip install --upgrade pip
-          pip3 install ansible==6.7.0 requests botocore boto boto3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.PRIVATE_KEY }}
-          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-
-      - name: Run playbook
-        run: |
-          ansible-playbook ansible/playbook.yml --ssh-common-args='-o StrictHostKeyChecking=no'
