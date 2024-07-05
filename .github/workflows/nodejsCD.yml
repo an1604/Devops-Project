@@ -7,20 +7,11 @@ on:
       - completed
 
 jobs:
-  deploy: # Hello world
+  deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Log in to Docker Hub
-        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-      - name: Pull Docker images
-        run: |
-          docker pull avivnat13/devops_project-client:latest
-          docker pull avivnat13/devops_project-server:latest
-          docker pull mongo:6-jammy
-
-      - name: Start Docker containers
+      - name: Run a script to deploy the application
         run: |
           sudo ./deploy_application.sh
 #          sudo docker network create node-network || true
