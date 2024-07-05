@@ -52,7 +52,7 @@ const RegisterPage: React.FC = (): React.ReactNode => {
         newFormData.append("email", formData.email);
         newFormData.append("password", formData.password);
         console.log(newFormData);
-        axios.post("http://localhost:5000/auth/register", newFormData).then((res) => {
+        axios.post("http://3.93.246.126:5000/auth/register", newFormData).then((res) => {
           console.log(res);
           navigate("/login");
         });
