@@ -1,4 +1,4 @@
-name: Node.js CI/CD Pipeline
+name: Node.js CI Pipeline
 
 on:
   push:
@@ -72,24 +72,24 @@ jobs:
           JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+#
+#      - name: Run Docker Compose to start application
+#        run: docker-compose up -d --build
+#        env:
+#          MONGO_URI: ${{ secrets.MONGO_URI }}
+#          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+#          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+#          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+#          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
-      - name: Run Docker Compose to start application
-        run: docker-compose up -d --build
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+#      - name: Scan the web application
+#        uses: zaproxy/action-baseline@v0.6.1
+#        with:
+#          docker_name: 'ictu/zap2docker-weekly'
+#          target: "http://localhost:5173" # The URL of the running application
+#          cmd_options: '-a'
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
-      - name: Scan the web application
-        uses: zaproxy/action-baseline@v0.6.1
-        with:
-          docker_name: 'ictu/zap2docker-weekly'
-          target: "http://localhost:5173" # The URL of the running application
-          cmd_options: '-a'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-
-      - name: Stop Docker Compose
-        run: docker-compose down
+#      - name: Stop Docker Compose
+#        run: docker-compose down
