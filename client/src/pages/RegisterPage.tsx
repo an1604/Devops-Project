@@ -6,7 +6,7 @@ import avatarProfile from "../assets/avatarProfile.jpg";
 import {uploadPhoto} from "../services/file-service";
 import {useNavigate} from "react-router-dom";
 import {registrUser} from "../services/user-services";
-
+import {MachineIP} from '../IP'
 
 interface RegisterForm {
     username: string;
@@ -52,7 +52,7 @@ const RegisterPage: React.FC = (): React.ReactNode => {
                 newFormData.append("email", formData.email);
                 newFormData.append("password", formData.password);
                 console.log(newFormData);
-                axios.post("http://localhost:5000/auth/register", newFormData).then((res) => {
+                axios.post(`http://${MachineIP}:5000/auth/register`, newFormData).then((res) => {
                     console.log(res);
                     navigate("/login");
                 });

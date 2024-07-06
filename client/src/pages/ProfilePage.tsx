@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import { useAppContext } from "../AppContext";
+import {useAppContext} from "../AppContext";
+import {MachineIP} from '../IP'
+
 
 const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>({});
-    const { updateAccessToken, updateRefreshToken } = useAppContext();
+    const {updateAccessToken, updateRefreshToken} = useAppContext();
     const [userPhoto, setUserPhoto] = useState("");
     const [userPosts, setUserPosts] = useState([]);
-    const { accessToken } = useAppContext();
+    const {accessToken} = useAppContext();
 
     const logout = () => {
         updateAccessToken("");
@@ -20,7 +22,7 @@ const ProfilePage: React.FC = () => {
     const fetchUserPhoto = async (id: string) => {
         console.log("fetchUserPhoto");
         try {
-            const response = await axios.get(`http://localhost:5000/user/photo/${id}`, {
+            const response = await axios.get(`http://${MachineIP}:5000/user/photo/${id}`, {
                 responseType: "blob",
             });
             console.log(response);
@@ -32,7 +34,7 @@ const ProfilePage: React.FC = () => {
 
     const fetchUserPosts = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/posts/byuser`,
+            const response = await axios.get(`http://${MachineIP}:5000/posts/byuser`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -52,7 +54,7 @@ const ProfilePage: React.FC = () => {
             navigate("/login");
         } else {
             try {
-                const response = await axios.get("http://localhost:5000/user", {
+                const response = await axios.get(`http://${MachineIP}:5000/user`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
@@ -73,7 +75,7 @@ const ProfilePage: React.FC = () => {
         if (accessToken && refreshToken) {
             console.log("Access and refresh tokens exist");
             fetchUserData();
-            
+
         } else {
             navigate("/login");
         }
@@ -83,7 +85,7 @@ const ProfilePage: React.FC = () => {
         <>
             <div className="profile-page">
                 <h1>Profile Page</h1>
-                {userPhoto && <img className="user-photo" src={userPhoto} alt="user photo" />}
+                {userPhoto && <img className="user-photo" src={userPhoto} alt="user photo"/>}
                 <div className="user-info">
                     <h2>User Info</h2>
                     <p>Username: {user.username}</p>
@@ -91,17 +93,17 @@ const ProfilePage: React.FC = () => {
                 </div>
                 <div className="user-btns">
                     <button onClick={() => navigate("/update-profile")}>Update</button>
-                    <button style={{ backgroundColor: "#c73a3a" }} onClick={() => logout()}>Logout</button>
+                    <button style={{backgroundColor: "#c73a3a"}} onClick={() => logout()}>Logout</button>
                 </div>
             </div>
             <div>
                 <h2>My Posts</h2>
                 <table>
                     <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Content</th>
-                        </tr>
+                    <tr>
+                        <th>Title</th>
+                        <th>Content</th>
+                    </tr>
                     </thead>
                     <tbody>
 

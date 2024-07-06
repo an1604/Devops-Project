@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { format } from 'date-fns';
+import {MachineIP} from '../IP'
+
+
 
 
 
@@ -11,7 +14,7 @@ const PostCommentsPage: React.FC = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/comments/${id}`);
+                const response = await fetch(`http://${MachineIP}:5000/comments/${id}`);
                 const data = await response.json();
                 data.sort((a: any, b: any) => {
                     return new Date(b.date).getTime() - new Date(a.date).getTime();

@@ -1,6 +1,7 @@
 import React, { useState, } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {MachineIP} from '../IP'
 
 const CreatePostPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const CreatePostPage: React.FC = () => {
       navigate("/login");
     } else {
       try {
-        const response = await axios.get("http://localhost:5000/user", {
+        const response = await axios.get(`http://${MachineIP}:5000/user`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -41,7 +42,7 @@ const CreatePostPage: React.FC = () => {
       }
       else {
         fetchUserData();
-        axios.post("http://localhost:5000/posts", formData,
+        axios.post(`http://${MachineIP}:5000/posts`, formData,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

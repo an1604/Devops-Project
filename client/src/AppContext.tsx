@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import axios from 'axios';
+import {MachineIP} from '/src/IP'
+
 
 
 interface AppContextProps {
@@ -51,7 +53,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             console.log(expiry + ' seconds');
             const timeout = setTimeout(() => {
                 console.log('refreshing token');
-                axios.get('http://localhost:5000/auth/refresh', {
+                axios.get(`http://${MachineIP}:5000/auth/refresh`, {
                     headers: {
                         'Authorization': `Bearer ${refreshToken}`
                     }

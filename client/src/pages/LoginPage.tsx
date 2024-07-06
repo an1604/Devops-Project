@@ -2,6 +2,7 @@ import React, { useState, useEffect, } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../AppContext";
+import {MachineIP} from '../IP'
 
 interface LoginCredentials {
   email: string;
@@ -25,7 +26,7 @@ const LoginPage: React.FC = () => {
     try {
       axios
         .post(
-          "http://localhost:5000/auth/login",
+          `http://${MachineIP}:5000/auth/login`,
           credentials,
           {
             headers: {

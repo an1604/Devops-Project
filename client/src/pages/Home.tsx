@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PostComp from '../components/PostComp';
+import {MachineIP} from '../IP'
+
 
 
 const Home: React.FC = () => {
@@ -14,7 +16,7 @@ const Home: React.FC = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/posts', {
+                const response = await axios.get(`http://${MachineIP}:5000/posts`, {
                 });
                 response.data.sort((a: any, b: any) => {
                     return new Date(b.date).valueOf() - new Date(a.date).valueOf();
