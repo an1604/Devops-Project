@@ -51,8 +51,6 @@ describe('Register new user', function () {
 
     it('should register and get to the login page', async function () {
         await driver.get(`http://${MachineIP}:5173/register`);
-
-        // Get the current URL
         let register_url = await driver.getCurrentUrl();
         assert.strictEqual(register_url, `http://${MachineIP}:5173/register`);
 
