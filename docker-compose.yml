@@ -44,6 +44,7 @@ services:
     build:
       context: ./reverseproxy
       dockerfile: Dockerfile
+    image: avivnat13/reverseproxy:latest
     ports:
       - "80:80"
     depends_on:

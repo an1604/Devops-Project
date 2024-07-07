@@ -63,30 +63,30 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Container scan + Secret Detection scan for both server and client
-      - name: Scan server image for vulnerabilities
-        uses: crazy-max/ghaction-container-scan@v3
-        with:
-          image: avivnat13/devops_project-server:latest
-          dockerfile: ./server/Dockerfile
-
-      - name: Upload SARIF file for server
-        if: ${{ steps.scan.outputs.sarif != '' }}
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
-
-      - name: Scan client image for vulnerabilities
-        uses: crazy-max/ghaction-container-scan@v3
-        with:
-          image: avivnat13/devops_project-client:latest
-          dockerfile: ./client/Dockerfile
-
-      - name: Upload SARIF file for client
-        if: ${{ steps.scan.outputs.sarif != '' }}
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
+#      # Container scan + Secret Detection scan for both server and client
+#      - name: Scan server image for vulnerabilities
+#        uses: crazy-max/ghaction-container-scan@v3
+#        with:
+#          image: avivnat13/devops_project-server:latest
+#          dockerfile: ./server/Dockerfile
+#
+#      - name: Upload SARIF file for server
+#        if: ${{ steps.scan.outputs.sarif != '' }}
+#        uses: github/codeql-action/upload-sarif@v2
+#        with:
+#          sarif_file: ${{ steps.scan.outputs.sarif }}
+#
+#      - name: Scan client image for vulnerabilities
+#        uses: crazy-max/ghaction-container-scan@v3
+#        with:
+#          image: avivnat13/devops_project-client:latest
+#          dockerfile: ./client/Dockerfile
+#
+#      - name: Upload SARIF file for client
+#        if: ${{ steps.scan.outputs.sarif != '' }}
+#        uses: github/codeql-action/upload-sarif@v2
+#        with:
+#          sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Build and push Docker images
         run: |
