@@ -63,6 +63,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt update
+          sudo apt install -y docker-compose
+      - name: Run the application locally
+        run: |
+          docker-compose up -d
+
+      - name: Run the application locally
+        run: |
+          sudo apt install python3 
+
+          cd /tests
+          python3 -m venv myenv
+          source myenv/bin/activate
+
+          pip install -r requirements.txt
+          pytest
+
       # Container scan + Secret Detection scan for both server and client
       - name: Scan server image for vulnerabilities
         uses: crazy-max/ghaction-container-scan@v3
@@ -87,6 +106,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
+
 
       - name: Build and push Docker images
         run: |
