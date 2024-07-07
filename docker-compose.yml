@@ -1,3 +1,4 @@
+# docker-compose.yml file for multi-container application.
 version: '3.8' # The version of Docker Compose file format
 
 services:
