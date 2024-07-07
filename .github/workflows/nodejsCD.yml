@@ -13,15 +13,6 @@ jobs:
     steps:
       - name: Run a script to deploy the application
         run: |
-          cd /home/ubuntu
-          sudo ./deploy_application.sh
-#          sudo docker network create node-network || true
-#          sudo docker run -d --name mongodb --network=node-network -p 27017:27017 -v dbdata6:/data/db mongo:6-jammy
-#          sudo docker run -d --name api --network=node-network -p 5000:5000 \
-#            -e MONGO_URI=$MONGO_URI \
-#            -e JWT_SECRET=$JWT_SECRET \
-#            -e JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET \
-#            -e JWT_EXPIRATION=$JWT_EXPIRATION \
-#            -e GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
-#            avivnat13/devops_project-server:latest
-#          sudo docker run -d --name client --network=node-network -p 5173:5173 avivnat13/devops_project-client:latest
+          #          cd /home/ubuntu
+          #          sudo ./deploy_application.sh
+               sudo /home/ubuntu/deploy_application.sh
