@@ -1,6 +1,6 @@
 import pytest
 from pymongo import MongoClient
-from utilFunc import generate_test_user, generate_test_post
+from utilFunc import generate_test_user, generate_test_post, generate_test_comment
 
 MachineIP = '127.0.0.1'
 dbName = 'test'
@@ -66,18 +66,3 @@ def test_retrieve_data_from_posts():
     # Cleanup the test data
     posts_collection.delete_one({'_id': test_post['_id']})
     users_collection.delete_one({'_id': user_id})
-
-
-"""
-steps foreach collection [Users, Comments, Posts]: 
-1) Create random data.
-2) Check if data exists.
-
-Future work: 
-1) test_retrieve_data_from_posts.
-2) Create tests for the application's size (If the application can be used in a mobile screen size).
-
-Optional: 
-1) test_retrieve_data_from_comments.
-2) Inspect the application and find some cool stuff to test it.
-"""
