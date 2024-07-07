@@ -205,8 +205,8 @@ label {
     border: 1px solid #000;
     border-radius: 5px;
     /*Change the color of the profile page to see if the changes approved on cloud*/
-    /*background-color: #1b1a55;*/
-    background-color: #1a551b;
+    background-color: #1b1a55;
+    /*background-color: #1a551b;*/
     color: #ffffff;
     width: 50%;
     min-height: 200px;
