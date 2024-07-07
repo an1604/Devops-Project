@@ -41,4 +41,5 @@ In this step, we containerize 4 images using Docker Compose:
   - Unit tests for each component.
   - End-to-end tests to ensure full application functionality.
   - Scalability and performance tests.
+  - Browser tests to make sure it handles cookies and had the right version.
 
