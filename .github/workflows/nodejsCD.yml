@@ -13,6 +13,4 @@ jobs:
     steps:
       - name: Run a script to deploy the application
         run: |
-          #          cd /home/ubuntu
-          #          sudo ./deploy_application.sh
-               sudo /home/ubuntu/deploy_application.sh
+          sudo /home/ubuntu/deploy_application.sh
