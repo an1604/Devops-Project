@@ -72,7 +72,18 @@ jobs:
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
-      #      - name: Get machine IP address
+      # Container scan for both server and client
+      - name: Scan server image for vulnerabilities
+        uses: crazy-max/ghaction-container-scan@v3
+        with:
+          image: avivnat13/devops_project-server:latest
+
+      - name: Scan client image for vulnerabilities
+        uses: crazy-max/ghaction-container-scan@v3
+        with:
+          image: avivnat13/devops_project-client:latest
+
+        #      - name: Get machine IP address
       #        id: get_ip
       #        run: echo "HOST_IP=$(curl -s http://checkip.amazonaws.com)" >> $GITHUB_ENV
       #
@@ -85,18 +96,4 @@ jobs:
       #          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
       #          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       #
-      #      - name: Scan the web application
-      #        uses: zaproxy/action-baseline@v0.6.1
-      #        with:
-      #          docker_name: 'ictu/zap2docker-weekly'
-      #          target: "http://${{ env.HOST_IP }}:5173"
-      #          cmd_options: '-a'
-      #        env:
-      #          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-      #
-      #      - name: Stop Docker Compose
-      #        run: docker-compose down
-#      - name: Container scan
-#        uses: crazy-max/ghaction-container-scan@v3
-#          with:
-#            image: user/app1:latest
+
