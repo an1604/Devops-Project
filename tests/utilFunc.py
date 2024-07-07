@@ -54,3 +54,11 @@ def generate_test_post(user_id):
         'date': fake.date(),
         'numComments': random.randint(1, 10),
     }
+
+def generate_test_comment(post_id, user_id, username):
+    return {
+        'postId': post_id,
+        'content': fake.text(),
+        'name': username,
+        'date': fake.past_date(start_date="-30d", tzinfo=None)  # Ensuring the date is past the post date
+    }

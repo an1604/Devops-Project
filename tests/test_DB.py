@@ -1,6 +1,6 @@
 import pytest
 from pymongo import MongoClient
-from utilFunc import generate_test_user, generate_test_post
+from utilFunc import generate_test_user, generate_test_post, generate_test_comment
 
 MachineIP = '127.0.0.1'
 dbName = 'test'
@@ -68,6 +68,54 @@ def test_retrieve_data_from_posts():
     users_collection.delete_one({'_id': user_id})
 
 
+
+def test_retrieve_data_from_comments():
+    usersCollectionName = 'users'
+    postsCollectionName = 'posts'
+    commentsCollectionName = 'comments'
+    client = MongoClient(f'mongodb://{MachineIP}:27017/{dbName}')
+    db = client[dbName]
+
+    # Generate and insert a test user
+    test_user = generate_test_user()
+    print(f"Test user: {test_user}")
+
+    users_collection = db[usersCollectionName]
+    user_insert_result = users_collection.insert_one(test_user)
+    user_id = user_insert_result.inserted_id
+    username = test_user['username']
+
+    # Generate and insert a test post for the user
+    test_post = generate_test_post(user_id)
+    print(f"Test post: {test_post}")
+
+    posts_collection = db[postsCollectionName]
+    post_insert_result = posts_collection.insert_one(test_post)
+    post_id = post_insert_result.inserted_id
+
+    # Generate and insert a test comment for the post
+    test_comment = generate_test_comment(post_id, user_id, username)
+    print(f"Test comment: {test_comment}")
+
+    comments_collection = db[commentsCollectionName]
+    comments_collection.insert_one(test_comment)
+
+    # Retrieve data from the comments collection
+    data = list(comments_collection.find({'postId': post_id}))
+
+    assert isinstance(data, list)
+    assert len(data) > 0
+
+    for item in data:
+        assert 'postId' in item
+        assert 'content' in item
+        assert 'name' in item
+        assert 'date' in item
+
+    # Cleanup the test data
+    comments_collection.delete_one({'_id': test_comment['_id']})
+    posts_collection.delete_one({'_id': post_id})
+    users_collection.delete_one({'_id': user_id})
 """
 steps foreach collection [Users, Comments, Posts]: 
 1) Create random data.
