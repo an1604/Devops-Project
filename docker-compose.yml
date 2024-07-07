@@ -53,11 +53,21 @@ services:
       timeout: 10s
       retries: 3
 
-# Volume definition
-volumes:
-  dbdata6: # Define a volume named dbdata6 for MongoDB data persistence
+  # Nginx reverse proxy service definition
+  reverseproxy:
+    build:
+      context: ./reverseproxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - client
+    networks:
+      - node-network
 
-# Network definition
+volumes:
+  dbdata6:
+
 networks:
   node-network:
     driver: bridge # Use the bridge driver to create an isolated network for the containers

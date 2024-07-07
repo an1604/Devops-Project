@@ -46,7 +46,9 @@ jobs:
       - name: Run tests
         run: npm test || true
 
-  docker: # After the test, we can continue to push the image to dockerhub, and move on to the CD process.
+  # In this job, we log in to the docker-hub user, scan the containers for vulnerabilities
+  # container scan and secret detection, then, we push the multi-image application to docker-hub.
+  docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -60,17 +62,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push Docker images
-        run: |
-          docker-compose build
-          docker-compose push
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
       # Container scan + Secret Detection scan for both server and client
       - name: Scan server image for vulnerabilities
@@ -97,17 +88,16 @@ jobs:
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
-        #      - name: Get machine IP address
-      #        id: get_ip
-      #        run: echo "HOST_IP=$(curl -s http://checkip.amazonaws.com)" >> $GITHUB_ENV
-      #
-      #      - name: Run Docker Compose to start application
-      #        run: docker-compose up -d --build
-      #        env:
-      #          MONGO_URI: ${{ secrets.MONGO_URI }}
-      #          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      #          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-      #          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-      #          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      #
+      - name: Build and push Docker images
+        run: |
+          docker-compose build
+          docker-compose push
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+
 
