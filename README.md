@@ -32,6 +32,3 @@ In this step, we configure the EC2 machine to act as a self-hosted runner that l
   - End-to-end tests to ensure full application functionality.
   - Scalability and performance tests.
 
-## Conclusion
-This project demonstrates a full-stack DevOps approach, integrating containerization, automated testing, and secure deployment on AWS using Git workflows and Ansible configuration.
-
