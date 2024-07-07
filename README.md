@@ -7,7 +7,7 @@ This project implements a React application on the client side and a Node.js ser
 - Developed a React application for the client side.
 - Created a Node.js server to handle backend operations.
 
-### 2. Infrastructure Configuration
+## 2. Infrastructure Configuration
 In this phase, we utilized Ansible to configure AWS EC2 instances and prepare the environment for application deployment. The process included:
 
 - **Ansible Framework Setup:** Implemented Ansible playbooks to automate the setup of AWS EC2 instances. This included provisioning new instances, configuring operating system settings, and installing necessary dependencies.
