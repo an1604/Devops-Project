@@ -16,14 +16,14 @@ In this phase, we utilized Ansible to configure AWS EC2 instances and prepare th
 
 - **Environment Configuration:** Set up additional configurations required for deployment, such as environment variables, networking configurations, and any specific runtime settings necessary for the React app and Node.js server to function properly in a production environment.
 
-This phase ensured that our infrastructure was properly set up and secured, laying a solid foundation for deploying and running the application on AWS EC2 instances.
-
-
 ## 3. GitHub Workflow
-In this section, we created a CI/CD pipeline to handle changes to the main branch, ran security scans, containerized the application, and deployed it on AWS EC2.
 
 ### 3.1 Containerization
-In this step, we containerize 4 images using Docker Compose and push them to Docker Hub. One of these images is configured as a reverse proxy to communicate through port 80, enhancing security by reducing open ports and securing communications.
+In this step, we containerize 4 images using Docker Compose:
+  - Pushed these containerized images to Docker Hub.
+  - Configured one of these images as a reverse proxy to communicate through port 80.
+  - Enhanced security by reducing open ports and securing communications.
+
 
 ### 3.2 Continuous Integration and Security
 - Integrated Git actions to automate code scans:
@@ -33,8 +33,6 @@ In this step, we containerize 4 images using Docker Compose and push them to Doc
   - Secret Detection scan
 
 ### 3.3 Deployment
-In this step, we configure the EC2 machine to act as a self-hosted runner that listens to GitHub's tasks and responds by running the instructions when they come.
-
 - Pushed Docker containers to Git and Docker repositories.
 - Deployed the application on AWS EC2 instances.
 
