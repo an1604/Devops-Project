@@ -46,37 +46,14 @@ jobs:
       - name: Run tests
         run: npm test || true
 
-  dast_scan: # Performing a DAST (Dynamic application security testing) on the application locally before the CD runs.
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      #  dast_scan: # Performing a DAST (Dynamic application security testing) on the application locally before the CD runs.
+      #    runs-on: ubuntu-latest
+      #    needs: build
+      #    steps:
+      #      - name: Checkout code
+      #        uses: actions/checkout@v4
 
-      - name: Get machine IP address
-        id: get_ip
-        run: echo "HOST_IP=$(curl -s http://checkip.amazonaws.com)" >> $GITHUB_ENV
 
-      - name: Run Docker Compose to start application
-        run: docker-compose up -d --build
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-
-      - name: Scan the web application
-        uses: zaproxy/action-baseline@v0.6.1
-        with:
-          docker_name: 'ictu/zap2docker-weekly'
-          target: "http://${{ env.HOST_IP }}:5173"
-          cmd_options: '-a'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-
-      - name: Stop Docker Compose
-        run: docker-compose down
 
   docker: # After the test, we can continue to push the image to dockerhub, and move on to the CD process.
     runs-on: ubuntu-latest
@@ -104,3 +81,28 @@ jobs:
           JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Get machine IP address
+        id: get_ip
+        run: echo "HOST_IP=$(curl -s http://checkip.amazonaws.com)" >> $GITHUB_ENV
+
+      - name: Run Docker Compose to start application
+        run: docker-compose up -d --build
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Scan the web application
+        uses: zaproxy/action-baseline@v0.6.1
+        with:
+          docker_name: 'ictu/zap2docker-weekly'
+          target: "http://${{ env.HOST_IP }}:5173"
+          cmd_options: '-a'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      - name: Stop Docker Compose
+        run: docker-compose down
