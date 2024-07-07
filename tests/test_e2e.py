@@ -87,7 +87,6 @@ def create_post(driver):
 def create_comment(driver):
     driver.get(url_prefix + 'home')
 
-    # Locate the first post (assuming 'postcomp' is the class name for posts)
     post = driver.find_element(By.CLASS_NAME, 'postcomp')
 
     if post:
