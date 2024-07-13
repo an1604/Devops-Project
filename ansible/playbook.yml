@@ -153,10 +153,11 @@
       seconds: 30
 
 
-      
+
 # ##############################################################
 - name: Setup web server
   hosts: app
+  user: ubuntu
   become: yes
   gather_facts: False
   vars_files:
