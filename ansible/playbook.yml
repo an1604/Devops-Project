@@ -47,7 +47,7 @@
 
   - name: Add subnet definition to vars file
     ansible.builtin.lineinfile:
-      path: group_vars/colman.env
+      path: group_vars/env
       regexp: 'subnet_id: '
       line: 'subnet_id: {{ subnet.subnet.id }}'
       state: present
@@ -64,7 +64,7 @@
 
   - name: Add IGW definition to vars file
     ansible.builtin.lineinfile:
-      path: group_vars/colman.env
+      path: group_vars/env
       regexp: 'igw_id: '
       line: 'igw_id: {{ igw.gateway_id}}'
       state: present
@@ -95,6 +95,7 @@
           ports:
           - 80
           - 22
+          - 5000
           cidr_ip: 0.0.0.0/0
     register: sg
 
@@ -135,8 +136,54 @@
 
   - name: Add Public IP definition to vars file
     ansible.builtin.lineinfile:
-      path: group_vars/colman.env
+      path: group_vars/env
       regexp: 'server_id: '
       line: 'server_id: {{ ec2_data.instances[0].instance_id }}'
       state: present
       create: True
+
+  - name: Wait for SSH to start using external IP
+    wait_for:
+      host: "{{ ec2_data.instances[0].public_ip_address }}"
+      port: 22
+      timeout: 300
+
+# ##############################################################
+- name: Setup web server
+  hosts: app
+  become: yes
+  gather_facts: yes
+  vars_files:
+    - group_vars/env
+  tasks:  
+    - name: Add docker GPG apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+          - 
+       
+    - name: Add docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+        update_cache: yes
+
+    - name: Install docker
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+        update_cache: yes
+
+    - name: Start docker
+      ansible.builtin.service:
+        name: "docker"
+        state: started
+        enabled: yes
+
+    - name: print docker version
+      shell: docker --version > index.txt
