@@ -103,14 +103,42 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install packages
-        run: pip install  selenium pytest
-
-      - name: Install requirements
+      - name: Install Chrome and ChromeDriver
         run: |
-          #          cd tests
-               pip install -r tests/requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
+          CHROME_VERSION=$(google-chrome --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip
+          unzip /tmp/chromedriver.zip -d /tmp/
+          sudo mv /tmp/chromedriver /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      - name: Install packages
+        run: pip install webdriver-manager selenium pytest
+
       - name: Run tests on the deployed docker application (not in production yet)
         run: |
           cd tests 
           pytest -rA # Used for recursion checking for 'test_' template that pytest depend on.
+        env:
+          PATH: /usr/local/bin:$PATH
+
+# Runs the tests that we created in this section.
+#      - name: Configure the test environment to run all the tests
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: '3.10'
+#
+#      - name: Install packages
+#        run: pip install  selenium pytest
+#
+#      - name: Install requirements
+#        run: |
+#          #          cd tests
+#               pip install -r tests/requirements.txt
+#      - name: Run tests on the deployed docker application (not in production yet)
+#        run: |
+#          cd tests
+#          pytest -rA # Used for recursion checking for 'test_' template that pytest depend on.
