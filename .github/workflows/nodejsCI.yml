@@ -101,10 +101,10 @@ jobs:
       - name: Configure the test environment to run all the tests
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install packages
-        run: sudo apt install webdriver-manager selenium pytest
+        run: pip install webdriver-manager selenium pytest
       - name: Run tests on the deployed docker application (not in production yet)
         run: |
           cd tests 
