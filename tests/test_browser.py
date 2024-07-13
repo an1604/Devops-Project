@@ -3,12 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
-from utilFunc import get_headless_chrome_driver
-
 
 def test_browser_type_and_version():
-    # driver = webdriver.Chrome()
-    driver = get_headless_chrome_driver()
+    driver = webdriver.Chrome()
     driver.get("about:blank")
     caps = driver.capabilities
     assert caps['browserName'] == 'chrome'
@@ -17,8 +14,7 @@ def test_browser_type_and_version():
 
 
 def test_cookies_management():
-    # driver = webdriver.Chrome()
-    driver = get_headless_chrome_driver()
+    driver = webdriver.Chrome()
     driver.get(f'http://localhost:5173/')
 
     # Checking the default cookies' capacity.

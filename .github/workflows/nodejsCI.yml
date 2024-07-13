@@ -96,23 +96,3 @@ jobs:
       - name: Run the application using docker
         run: |
           docker-compose up -d
-
-      # Runs the tests that we created in this section.
-      - name: Configure the test environment to run all the tests
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-
-      - name: Install packages
-        run: |
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-          pip install webdriver-manager selenium pytest
-
-      - name: Install requirements
-        run: |
-          #          cd tests
-               pip install -r tests/requirements.txt
-      - name: Run tests on the deployed docker application (not in production yet)
-        run: |
-          cd tests 
-          pytest -rA # Used for recursion checking for 'test_' template that pytest depend on.

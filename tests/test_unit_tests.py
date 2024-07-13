@@ -8,8 +8,7 @@ from utilFunc import *
 
 
 def test_user_can_login():
-    # driver = webdriver.Chrome()
-    driver = get_headless_chrome_driver()
+    driver = webdriver.Chrome()
     driver.get('http://localhost:5173/login')
 
     driver.find_element(By.ID, 'email').send_keys('admin@gmail.com')
