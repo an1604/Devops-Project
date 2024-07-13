@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
-from tests.utilFunc import get_headless_chrome_driver
+from utilFunc import get_headless_chrome_driver
 
 
 def test_browser_type_and_version():
