@@ -1,5 +1,5 @@
 name: Node.js CD Pipeline
-# This CD pipeline triggered when the CI completely done.
+# This CD pipeline is triggered when the CI is completely done.
 on:
   workflow_run:
     workflows: [ "Node.js CI Pipeline" ]
@@ -8,9 +8,60 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted # Define the EC2 machine as a self-hosted runner that waits for tasks.
-    # When it is triggered, it runs the commands below.
+    runs-on: ubuntu-latest
     steps:
-      - name: Run a script to deploy the application
-        run: |
-          sudo /home/ubuntu/deploy_application.sh
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH Client
+        run: sudo apt-get install openssh-client
+
+      - name: Copy deploy_app.sh to EC2 instance
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: deploy_app.sh
+          target: /home/ubuntu/my_project/deploy_app.sh
+
+      - name: Establish SSH connection and run deploy_app.sh
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/my_project
+            chmod +x deploy_app.sh
+            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            export DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
+            export MONGO_URI=${{ secrets.MONGO_URI }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
+            export JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
+            export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            export PORT=${{ secrets.PORT }}
+            export NODE_ENV=${{ secrets.NODE_ENV }}
+            export VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+            export VITE_GOOGLE_CLIENT_SECRET=${{ secrets.VITE_GOOGLE_CLIENT_SECRET }}
+            export VITE_WEATHER_API_KEY=${{ secrets.VITE_WEATHER_API_KEY }}
+            ./deploy_app.sh
+
+
+#name: Node.js CD Pipeline
+## This CD pipeline triggered when the CI completely done.
+#on:
+#  workflow_run:
+#    workflows: [ "Node.js CI Pipeline" ]
+#    types:
+#      - completed
+#
+#jobs:
+#  deploy:
+#    runs-on: self-hosted # Define the EC2 machine as a self-hosted runner that waits for tasks.
+#    # When it is triggered, it runs the commands below.
+#    steps:
+#      - name: Run a script to deploy the application
+#        run: |
+#          sudo /home/ubuntu/deploy_application.sh
