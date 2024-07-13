@@ -1,5 +1,5 @@
 name: Node.js CD Pipeline
-
+# This CD pipeline triggered when the CI completely done.
 on:
   workflow_run:
     workflows: [ "Node.js CI Pipeline" ]
@@ -8,8 +8,8 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
-
+    runs-on: self-hosted # Define the EC2 machine as a self-hosted runner that waits for tasks.
+    # When it is triggered, it runs the commands below.
     steps:
       - name: Run a script to deploy the application
         run: |

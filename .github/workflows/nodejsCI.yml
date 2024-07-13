@@ -23,12 +23,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build the project
-        run: npm run build --if-present || true
-
       - name: Client-side checking
         run: |
           cd client
@@ -98,3 +92,20 @@ jobs:
           JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
           JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Run the application using docker
+        run: |
+          docker-compose up -d
+
+      # Runs the tests that we created in this section.
+      - name: Configure the test environment to run all the tests
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install packages
+        run: sudo apt install webdriver-manager selenium pytest
+      - name: Run tests on the deployed docker application (not in production yet)
+        run: |
+          cd tests 
+          pytest -rA # Used for recursion checking for 'test_' template that pytest depend on.
