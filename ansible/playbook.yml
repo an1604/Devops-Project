@@ -148,6 +148,12 @@
       port: 22
       timeout: 300
 
+  - name: pause for 30 seconds
+    ansible.builtin.pause:
+      seconds: 30
+
+
+      
 # ##############################################################
 - name: Setup web server
   hosts: app
