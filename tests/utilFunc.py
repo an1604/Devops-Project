@@ -1,5 +1,5 @@
 import os
-
+from selenium.webdriver.chrome.options import Options
 from faker import Faker
 import random
 
@@ -63,3 +63,14 @@ def generate_test_comment(post_id, user_id, username):
         'name': username,
         'date': fake.past_date(start_date="-30d", tzinfo=None)  # Ensuring the date is past the post date
     }
+
+
+def get_headless_chrome_driver():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    driver = webdriver.Chrome(options=options)
+    return driver

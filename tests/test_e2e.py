@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
-from utilFunc import get_fake_email, get_fake_username, get_password
+from utilFunc import get_fake_email, get_fake_username, get_password, get_headless_chrome_driver
 
 MachineIP = 'localhost'
 url_prefix = f'http://{MachineIP}:5173/'
@@ -129,7 +129,8 @@ def test_end_to_end():
     username = get_fake_username()
     email = get_fake_email()
     password = get_password(8)
-    driver = webdriver.Chrome()
+    # driver = webdriver.Chrome()
+    driver = get_headless_chrome_driver()
 
     # Tests performance.
     register_user(driver, username, email, password)
