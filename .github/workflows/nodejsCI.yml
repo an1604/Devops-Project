@@ -1,3 +1,4 @@
+# The CI pipeline
 name: Node.js CI Pipeline
 
 on:
