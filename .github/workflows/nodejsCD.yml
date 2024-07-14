@@ -46,4 +46,4 @@ jobs:
 
       - name: Deploy Application
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'bash -s' < deploy_application.sh
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'bash -s' < /home/ubuntu/deploy_application.sh
