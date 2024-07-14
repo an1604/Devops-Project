@@ -212,5 +212,5 @@
     - name: run client container
       shell: docker run -d --name client --network=node-network -p 5173:5173 avivnat13/devops_project-client:latest
 
-    - name: run reverse proxy container
-      shell: docker run -d --name reverseproxy --network=node-network -p 80:80 avivnat13/reverseproxy:latest
+    # - name: run reverse proxy container
+      # shell: docker run -d --name reverseproxy --network=node-network -p 80:80 avivnat13/reverseproxy:latest
