@@ -26,7 +26,7 @@ jobs:
             python-version: 3.8
 
       - name: Install SSH Client
-          run: sudo apt-get install openssh-client
+        run: sudo apt-get install openssh-client
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
