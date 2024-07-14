@@ -1,4 +1,5 @@
 import axios from "axios";
+import { MachineIP } from "../IP";
 
 export const uploadPhoto = async (photo: File) => {
   console.log("Uploading photo..." + photo);
@@ -6,7 +7,7 @@ export const uploadPhoto = async (photo: File) => {
   if (photo) {
     formData.append("file", photo);
     const res = await axios.post(
-      "http://localhost:5000/file",
+      `http://${MachineIP}:5000/file`,
       formData,
       {
         headers: {

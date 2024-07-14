@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { MachineIP } from "../IP";
 
 interface MyComponentProps {
   key: any;
@@ -16,7 +17,7 @@ const PostComp: React.FC<MyComponentProps> = ({ post }: any) => {
 
   const getPostPhoto = () => {
     try {
-      axios.get(`http://localhost:5000/posts/photo/${post._id}`, {
+      axios.get(`http://${MachineIP}:5000/posts/photo/${post._id}`, {
         responseType: "blob",
       }).then((response) => {
         setPhoto(URL.createObjectURL(response.data));
@@ -29,7 +30,7 @@ const PostComp: React.FC<MyComponentProps> = ({ post }: any) => {
   const fetchUserPhoto = async () => {
     console.log("fetchUserPhoto");
     try {
-      const response = await axios.get(`http://localhost:5000/user/photo/${post.userId}`, {
+      const response = await axios.get(`http://${MachineIP}:5000/user/photo/${post.userId}`, {
         responseType: "blob",
       });
       console.log(response);
@@ -45,7 +46,7 @@ const PostComp: React.FC<MyComponentProps> = ({ post }: any) => {
 
   const getUserName = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/user/username/${post.userId}`);
+      const response = await axios.get(`http://${MachineIP}:5000/user/username/${post.userId}`);
       setUsername(response.data);
     } catch (error) {
       console.error(error);
@@ -58,7 +59,7 @@ const PostComp: React.FC<MyComponentProps> = ({ post }: any) => {
       navigate("/login");
     } else {
       try {
-        axios.post(`http://localhost:5000/comments/`,
+        axios.post(`http://${MachineIP}:5000/comments/`,
           {
             content: input,
             postId: post._id,
