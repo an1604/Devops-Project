@@ -167,7 +167,6 @@
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
-          - 
        
     - name: Add docker repository
       apt_repository:
