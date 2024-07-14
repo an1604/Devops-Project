@@ -14,3 +14,6 @@ server_name: ansible-test
 subnet_id: subnet-0aadd141c5ae954dc
 igw_id: igw-06a0e71d3cac1173c
 server_id: i-007f3a12c3065b318
+
+docker_username: avivnat13
+docker_password: Avivnata10!
