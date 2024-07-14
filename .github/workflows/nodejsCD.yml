@@ -6,11 +6,40 @@ on:
     types:
       - completed
 
+# jobs:
+#   deploy:
+#     runs-on: self-hosted # Define the EC2 machine as a self-hosted runner that waits for tasks.
+#     # When it is triggered, it runs the commands below.
+#     steps:
+#       - name: Run a script to deploy the application
+#         run: |
+#           sudo /home/ubuntu/deploy_application.sh
+
 jobs:
   deploy:
-    runs-on: self-hosted # Define the EC2 machine as a self-hosted runner that waits for tasks.
-    # When it is triggered, it runs the commands below.
+    runs-on: ubuntu-latest
     steps:
-      - name: Run a script to deploy the application
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+            python-version: 3.8
+      - name: Install dependencies
         run: |
-          sudo /home/ubuntu/deploy_application.sh
+            sudo apt-add-repository ppa:ansible/ansible
+            python -m pip install --upgrade pip
+            pip install ansible==6.7.0 requests botocore boto boto3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PRIVATE_KEY }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      - name: run playbook
+        run: |
+          ansible-playbook ansible/playbook.yml --ssh-common-args='-o StrictHostKeyChecking=no'

@@ -194,6 +194,12 @@
     - name: login to docker hub
       shell: docker login -u {{ docker_username }} -p {{ docker_password }}
 
+    - name: remove all containers
+      shell: docker rm -f $(docker ps -a -q) || true
+
+    - name: remove all images
+      shell: docker rmi -f $(docker images -q) || true
+
     - name: Creating a Docker network
       shell: docker network create node-network || true
     
