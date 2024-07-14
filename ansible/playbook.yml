@@ -142,6 +142,9 @@
       state: present
       create: True
 
+  -debug:
+      var: ec2_data.instances[0].public_ip_address
+
   - name: Wait for SSH to start using external IP
     wait_for:
       host: "{{ ec2_data.instances[0].public_ip_address }}"
