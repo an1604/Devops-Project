@@ -191,5 +191,5 @@
         state: started
         enabled: yes
 
-    - name: print docker version
-      shell: docker --version > index.txt
+    - name: create a run script
+      shell: echo "docker run -d -p 80:3000 -t --restart always --name calc elieyal2/calculator"
