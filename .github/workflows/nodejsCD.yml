@@ -19,17 +19,17 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            docker stop api client || true
-            docker rm api client || true
-            docker rmi avivnat13/devops_project-client:latest || true
-            docker rmi avivnat13/devops_project-server:latest || true
-            docker pull avivnat13/devops_project-client:latest
-            docker pull avivnat13/devops_project-server:latest
-            docker run -d --name api --network=node-network -p 5000:5000 \
+            sudo docker stop api client || true
+            sudo docker rm api client || true
+            sudo docker rmi avivnat13/devops_project-client:latest || true
+            sudo docker rmi avivnat13/devops_project-server:latest || true
+            sudo docker pull avivnat13/devops_project-client:latest
+            sudo docker pull avivnat13/devops_project-server:latest
+            sudo docker run -d --name api --network=node-network -p 5000:5000 \
             -e MONGO_URI=mongodb://mongodb:27017/mydatabase \
             -e JWT_SECRET="mysecret" \
             -e JWT_REFRESH_SECRET="myrefreshsecret" \
             -e JWT_EXPIRATION="1h" \
             -e GOOGLE_CLIENT_ID="12312312312312312" \
             avivnat13/devops_project-server:latest
-            docker run -d --name client --network=node-network -p 5173:5173 avivnat13/devops_project-client:latest
+            sudo docker run -d --name client --network=node-network -p 5173:5173 avivnat13/devops_project-client:latest
