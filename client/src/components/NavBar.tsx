@@ -26,7 +26,7 @@ const NavBar: React.FC = () => {
     >
       <div className="container-fluid">
         <a className="navbar-brand" href="./home">
-          Posty-Club
+          DEV
         </a>
         <button
           className="navbar-toggler"

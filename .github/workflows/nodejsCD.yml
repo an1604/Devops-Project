@@ -41,6 +41,9 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
 
+      - name: create env variable
+        run: export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+
       - name: Deploy Application
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.PRIVATE_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'bash -s' < deploy_application.sh
